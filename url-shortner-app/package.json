@@ -15,12 +15,14 @@
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.30",
+    "@types/pg": "^8.11.4",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "postgres": "^3.4.3",
+    "pg": "^8.11.3",
     "redis": "^4.6.13"
   }
 }
