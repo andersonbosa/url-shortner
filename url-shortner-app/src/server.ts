@@ -4,7 +4,6 @@ import config from './config'
 
 const fastifyServer = fastify()
 
-
 fastifyServer.listen({
   port: config.http.port
 })

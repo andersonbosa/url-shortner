@@ -1,24 +1,26 @@
 
-import { Client } from 'pg'
+import { Client, ClientConfig } from 'pg'
 
 interface PostgresServiceInput {
-  user: string
-  host: string
-  database: string
+  username: string
   password: string
+  host: string
   port: number
+  database: string
 }
 
 class PostgresService {
-  private client: Client
+  // private client: Client
+  public client: Client
 
-  constructor({ user, host, database, password, port }: PostgresServiceInput) {
+  constructor({ host, port, database, username, password }: PostgresServiceInput, options: ClientConfig = {}) {
     this.client = new Client({
-      user: user,
+      user: username,
       host: host,
       database: database,
       password: password,
       port: port,
+      ...options
     })
   }
 

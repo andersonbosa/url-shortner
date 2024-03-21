@@ -36,7 +36,7 @@ const defaultPostgresConfig: PostgresConfig = {
   port: 5432,
   username: 'psql',
   password: 'psql',
-  database: 'some_database',
+  database: 'url_shortner_db',
 }
 
 const config: AppConfig = {
@@ -50,6 +50,7 @@ const config: AppConfig = {
       port: Number(process.env.DB_REDIS_PORT ?? defaultRedisConfig.port),
       password: process.env.DB_REDIS_PASSWORD ?? defaultRedisConfig.password,
     },
+
     postgres: {
       host: process.env.DB_POSTGRES_HOST ?? defaultPostgresConfig.host,
       port: Number(process.env.DB_POSTGRES_PORT ?? defaultPostgresConfig.port),
