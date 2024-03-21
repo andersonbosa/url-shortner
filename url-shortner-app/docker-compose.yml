@@ -1,0 +1,28 @@
+version: '3.8'
+
+# Why Bitnami images? They are ready to production. See more in _____
+
+services:
+  postgresql:
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRES_USERNAME=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DATABASE=url-shortner-app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD=docker
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgresql_data:
+  redis_data:
