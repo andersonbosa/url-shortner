@@ -1,14 +1,16 @@
 import fastify from 'fastify'
+import config from './config'
 
 
 const fastifyServer = fastify()
 
 
 fastifyServer.listen({
-  port: Number(process.env.SERVER_PORT ?? 3333)
+  port: config.http.port
 })
   .then(
     () => {
       console.log('🚀 HTTP server is running')
+      console.log(config)
     }
   )
