@@ -23,6 +23,7 @@ interface AppConfig {
     redis: RedisConfig,
     postgres: PostgresConfig
   }
+  logging: { /* etc */ }
 }
 
 const defaultRedisConfig: RedisConfig = {
@@ -36,7 +37,7 @@ const defaultPostgresConfig: PostgresConfig = {
   port: 5432,
   username: 'psql',
   password: 'psql',
-  database: 'url_shortner_db',
+  database: 'url-shortner-db',
 }
 
 const config: AppConfig = {
@@ -58,7 +59,9 @@ const config: AppConfig = {
       password: process.env.DB_POSTGRES_PASSWORD ?? defaultPostgresConfig.password,
       database: process.env.DB_POSTGRES_DATABASE ?? defaultPostgresConfig.database,
     },
-  }
+  },
+
+  logging: { /* etc */ }
 }
 
 export default config
