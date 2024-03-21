@@ -1,20 +1,24 @@
 version: '3.8'
 
-# Why Bitnami images? They are ready to production. See more in _____
+# Why Bitnami images? They are ready to production.
+# See more in https://github.com/bitnami/containers/blob/main/bitnami/postgresql/README.md#why-use-bitnami-images
 
 services:
   postgresql:
     image: bitnami/postgresql:latest
-    environment:
-      - POSTGRES_USER=docker
+    environment: # https://github.com/bitnami/containers/blob/main/bitnami/postgresql/README.md#environment-variables
+      - POSTGRESQL_USERNAME=docker
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=url_shortner_db
+      - POSTGRES_DATABASE=url-shortner-db
+      - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+      - POSTGRESQL_CLIENT_MIN_MESSAGES=INFO
+      - POSTGRESQL_LOG_MIN_MESSAGES=INFO
     ports:
       - "5432:5432"
-    volumes:
-      - postgresql_data:/bitnami/postgresql
-    networks:
-      - url_shortner_app_nt
+    # volumes:
+    #   - postgresql_data:/bitnami/postgresql
+    # networks:
+    #   - url_shortner_app_nt
 
   redis:
     image: bitnami/redis:latest
@@ -22,28 +26,30 @@ services:
       - REDIS_PASSWORD=docker
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - url_shortner_app_nt
+    # volumes:
+    #   - redis_data:/data
+    # networks:
+    #   - url_shortner_app_nt
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@example.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-      - CONFIG_DATABASE_URI=postgresql://docker:docker@localhost:5432/url_shortner_db
+  # pgadmin:
+  #   image: dpage/pgadmin4:latest
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@example.com
+  #     - PGADMIN_DEFAULT_PASSWORD=admin
+  #     - CONFIG_DATABASE_URI=postgresql://docker:docker@localhost:5432/url-shortner-db
 
-    ports:
-      - "8080:80"
-    depends_on:
-      - postgresql
-    networks:
-      - url_shortner_app_nt
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - postgresql
+  #   networks:
+  #     - url_shortner_app_nt
+
 
 volumes:
   postgresql_data:
   redis_data:
+
 
 networks:
   url_shortner_app_nt:
