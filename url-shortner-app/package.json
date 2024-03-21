@@ -1,0 +1,21 @@
+{
+  "name": "url-shortner-app",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "keywords": [
+    "beginner"
+  ],
+  "license": "ISC",
+  "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
+  "scripts": {
+    "dev": "tsx --watch ./src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  }
+}
