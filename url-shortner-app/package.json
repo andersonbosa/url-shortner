@@ -17,5 +17,8 @@
     "@types/node": "^20.11.30",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "fastify": "^4.26.2",
   }
 }
