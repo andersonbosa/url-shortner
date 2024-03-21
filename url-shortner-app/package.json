@@ -10,6 +10,7 @@
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
     "dev": "tsx --watch ./src/server.ts",
+    "setup": "tsx ./src/setup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

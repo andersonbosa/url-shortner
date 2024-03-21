@@ -6,13 +6,15 @@ services:
   postgresql:
     image: bitnami/postgresql:latest
     environment:
-      - POSTGRES_USERNAME=docker
+      - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DATABASE=url-shortner-app
+      - POSTGRES_DB=url_shortner_db
     ports:
       - "5432:5432"
     volumes:
       - postgresql_data:/bitnami/postgresql
+    networks:
+      - url_shortner_app_nt
 
   redis:
     image: bitnami/redis:latest
@@ -22,7 +24,26 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - url_shortner_app_nt
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - CONFIG_DATABASE_URI=postgresql://docker:docker@localhost:5432/url_shortner_db
+
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgresql
+    networks:
+      - url_shortner_app_nt
 
 volumes:
   postgresql_data:
   redis_data:
+
+networks:
+  url_shortner_app_nt:
