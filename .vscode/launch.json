@@ -1,34 +1,9 @@
 {
   "version": "0.2.0",
   "compounds": [],
-   /* Configuration to improve DevEx */
+  /* Configuration to improve DevEx */
+  /*   - https://code.visualstudio.com/docs/editor/variables-reference */
   "configurations": [
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}/url-shortner-app/src/server.ts",
-      "outFiles": [
-        "${workspaceFolder}/**/*.js",
-        "!**/node_modules/**"
-      ]
-    },
-    {
-      "name": "nodemon",
-      "type": "node",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "request": "launch",
-      "restart": true,
-      "program": "${workspaceFolder}/${relativeFile}",
-      "runtimeExecutable": "nodemon",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-    },
     {
       "name": "Attach to --inspect",
       "port": 9229,
@@ -38,6 +13,48 @@
       ],
       "type": "node",
       "restart": true
-    }
+    },
+    {
+      "name": "Launch server",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/url-shortner-app/dist/server.ts",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "preLaunchTask": "tsc: watch - url-shortner-app"
+    },
+    {
+      "name": "Debug file",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/url-shortner-app/dist/${fileBasenameNoExtension}.js",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "envFile": "${workspaceFolder}/url-shortner-app/.env",
+      "preLaunchTask": "tsc: watch - url-shortner-app"
+    },
+    // {
+    //   "name": "nodemon",
+    //   "type": "node",
+    //   "console": "integratedTerminal",
+    //   "internalConsoleOptions": "neverOpen",
+    //   "request": "launch",
+    //   "restart": true,
+    //   "program": "${workspaceFolder}/${relativeFile}",
+    //   "runtimeExecutable": "nodemon",
+    //   "skipFiles": [
+    //     "<node_internals>/**"
+    //   ],
+    // },
   ],
 }
