@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "compounds": [],
+   /* Configuration to improve DevEx */
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/url-shortner-app/src/server.ts",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "nodemon",
+      "type": "node",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "request": "launch",
+      "restart": true,
+      "program": "${workspaceFolder}/${relativeFile}",
+      "runtimeExecutable": "nodemon",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+    },
+    {
+      "name": "Attach to --inspect",
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "restart": true
+    }
+  ],
+}
