@@ -18,14 +18,16 @@
       "name": "Launch server",
       "type": "node",
       "request": "launch",
+      // "runtimeExecutable": "/home/t4inha/.nvm/versions/node/v20.10.0/bin/node",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/url-shortner-app/dist/server.ts",
+      "program": "${workspaceFolder}/url-shortner-app/dist/server.js",
       "outFiles": [
         "${workspaceFolder}/**/*.js",
         "!**/node_modules/**"
       ],
+      "envFile": "${workspaceFolder}/url-shortner-app/.env",
       "preLaunchTask": "tsc: watch - url-shortner-app"
     },
     {
