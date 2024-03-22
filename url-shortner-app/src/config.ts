@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+/* Interfaces */
+
 interface RedisConfig {
   host: string
   port: number
@@ -15,6 +17,23 @@ interface PostgresConfig {
   database: string
 }
 
+/* https://tools.ietf.org/html/rfc5424 */
+type LoggingLevelsInRFC5424 = {
+  0: 'emerg'
+  1: 'alert'
+  2: 'crit'
+  3: 'error'
+  4: 'warning'
+  5: 'notice'
+  6: 'info'
+  7: 'debug'
+}
+
+interface LoggingConfig {
+  level: LoggingLevelsInRFC5424[keyof LoggingLevelsInRFC5424]
+  fileName?: string
+}
+
 interface AppConfig {
   http: {
     port: number
@@ -23,8 +42,10 @@ interface AppConfig {
     redis: RedisConfig,
     postgres: PostgresConfig
   }
-  logging: { /* etc */ }
+  logging: LoggingConfig
 }
+
+/* Default Values */
 
 const defaultRedisConfig: RedisConfig = {
   host: 'localhost',
@@ -40,28 +61,83 @@ const defaultPostgresConfig: PostgresConfig = {
   database: 'url-shortner-db',
 }
 
+function generateLogFileName (): string {
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear().toString().padStart(4, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const day = date.getDate().toString().padStart(2, '0')
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    const seconds = date.getSeconds().toString().padStart(2, '0')
+    return `${year}_${month}_${day}--${hours}_${minutes}_${seconds}.log`
+  }
+  return formatDate(new Date())
+}
+
+const defaultLoggingConfig: LoggingConfig = {
+  level: 'debug',
+fileName: generateLogFileName()
+}
+
+/* App Configuration  */
+
+/**
+ * Merges two objects, keeping only the keys from the target object and replacing their values
+ * with the corresponding values from the source object, if defined.
+ * 
+ * @template T - The type of the target object.
+ * @param {T} target - The target object from which to keep the keys.
+ * @param {Partial<T>} source - The source object containing the values to merge.
+ * @returns {T} - The merged object with the same keys as the target object.
+ */
+function mergeObjects<T extends Record<string, any>> (target: T, source: Partial<T>): T {
+  const merged: Partial<T> = {}
+  for (const key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      if (source[key] !== undefined && source[key] !== "") {
+        merged[key] = source[key]
+      } else {
+        merged[key] = target[key]
+      }
+    }
+  }
+  return merged as T
+}
+
 const config: AppConfig = {
   http: {
     port: Number(process.env.SERVER_PORT ?? 3333)
   },
 
   database: {
-    redis: {
-      host: process.env.DB_REDIS_HOST ?? defaultRedisConfig.host,
-      port: Number(process.env.DB_REDIS_PORT ?? defaultRedisConfig.port),
-      password: process.env.DB_REDIS_PASSWORD ?? defaultRedisConfig.password,
-    },
+    redis: mergeObjects(
+      defaultRedisConfig,
+      {
+        host: process.env.DB_REDIS_HOST,
+        port: Number(process.env.DB_REDIS_PORT),
+        password: process.env.DB_REDIS_PASSWORD,
+      }
+    ),
 
-    postgres: {
-      host: process.env.DB_POSTGRES_HOST ?? defaultPostgresConfig.host,
-      port: Number(process.env.DB_POSTGRES_PORT ?? defaultPostgresConfig.port),
-      username: process.env.DB_POSTGRES_USERNAME ?? defaultPostgresConfig.username,
-      password: process.env.DB_POSTGRES_PASSWORD ?? defaultPostgresConfig.password,
-      database: process.env.DB_POSTGRES_DATABASE ?? defaultPostgresConfig.database,
-    },
+    postgres: mergeObjects(
+      defaultPostgresConfig,
+      {
+        host: process.env.DB_POSTGRES_HOST,
+        port: Number(process.env.DB_POSTGRES_PORT),
+        username: process.env.DB_POSTGRES_USERNAME,
+        password: process.env.DB_POSTGRES_PASSWORD,
+        database: process.env.DB_POSTGRES_DATABASE,
+      }
+    ),
   },
 
-  logging: { /* etc */ }
+  logging: mergeObjects(
+    defaultLoggingConfig,
+    {
+      level: process.env.LOGGING_LEVEL as LoggingConfig['level'],
+      fileName: process.env.LOGGING_FILE,
+    }
+  )
 }
 
 export default config
