@@ -1,5 +1,6 @@
 import fastify from 'fastify'
 import config from './config'
+import logger from './lib/logger.service'
 
 
 const fastifyServer = fastify()
@@ -9,7 +10,7 @@ fastifyServer.listen({
 })
   .then(
     () => {
-      console.log('🚀 HTTP server is running')
-      console.log(config)
+      logger.info('🚀 HTTP server is running')
+      logger.info(config)
     }
   )

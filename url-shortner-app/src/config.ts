@@ -56,9 +56,9 @@ const defaultRedisConfig: RedisConfig = {
 const defaultPostgresConfig: PostgresConfig = {
   host: 'localhost',
   port: 5432,
-  username: 'psql',
-  password: 'psql',
-  database: 'url-shortner-db',
+  username: 'default_username',
+  password: 'default_password',
+  database: 'default_database',
 }
 
 function generateLogFileName (
