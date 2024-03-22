@@ -1,4 +1,5 @@
 import { Client } from 'pg'
+import logger from './logger.service'
 
 interface PostgresServiceInput {
   username: string
@@ -17,26 +18,32 @@ interface IPostgresService {
 
 class PostgresService implements IPostgresService {
   private client: Client
+  private serviceInput: PostgresServiceInput
 
-  constructor(
-    { host, port, database, username, password }: PostgresServiceInput,
-  ) {
-    this.client = new Client({
-      user: username,
-      host: host,
-      database: database,
-      password: password,
-      port: port,
+  constructor(input: PostgresServiceInput,) {
+    this.serviceInput = input
+    this.client = this.createClient(input)
+  }
+
+  private createClient (input: PostgresServiceInput): Client {
+    const client = new Client({
+      user: input.username,
+      host: input.host,
+      database: input.database,
+      password: input.password,
+      port: input.port,
     })
+    logger.debug('Create new PostgreSQL client!')
+    return client
   }
 
   async connect (): Promise<boolean> {
     try {
       await this.client.connect()
-      console.log('Conectado ao PostgreSQL!')
+      logger.debug('Connected to PostgreSQL!')
       return true
     } catch (error) {
-      console.error('Erro ao conectar ao PostgreSQL:', error)
+      logger.error('Error connecting to PostgreSQL:', error)
       return false
     }
   }
@@ -44,10 +51,11 @@ class PostgresService implements IPostgresService {
   async disconnect (): Promise<boolean> {
     try {
       await this.client.end()
-      console.log('Desconectado do PostgreSQL!')
+      logger.debug('Disconnected from PostgreSQL!')
+      this.client = this.createClient(this.serviceInput)
       return true
     } catch (error) {
-      console.error('Erro ao desconectar do PostgreSQL:', error)
+      logger.error('Error disconnecting from PostgreSQL:', error)
       return false
     }
   }
@@ -57,7 +65,7 @@ class PostgresService implements IPostgresService {
       const result = await this.client.query(sql, values)
       return result.rows
     } catch (error) {
-      console.error('Erro ao executar a consulta:', error)
+      logger.error('Error when executing the consultation:', error)
       throw error
     }
   }
@@ -66,15 +74,17 @@ class PostgresService implements IPostgresService {
     try {
       await this.connect()
       await this.query('SELECT 1')
+      logger.debug('PostgreSQL health check: OK')
+      await this.disconnect()
       return true
 
     } catch (error) {
-      console.error('Erro durante o teste de conexão com o PostgreSQL:', error)
-      return false
-
-    } finally {
+      logger.error('Error during the PostgreSQL health check:', error)
       await this.disconnect()
-    }
+      return false
+    }/* finally {
+      await this.disconnect() && console.log('eu 1')
+    }  */
   }
 }
 
