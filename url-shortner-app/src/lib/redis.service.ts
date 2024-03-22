@@ -12,12 +12,12 @@ interface RedisServiceInput {
 class RedisService {
   private client: RedisClientType
 
-  constructor({ host, port, username, password }: RedisServiceInput) {
+  constructor(input: RedisServiceInput) {
     const clientUrl: string = this.generateUrl({
-      host: host,
-      port: port,
-      username: username,
-      password: password,
+      host: input.host,
+      port: input.port,
+      username: input.username,
+      password: input.password,
     })
 
     this.client = createClient({ url: clientUrl })
