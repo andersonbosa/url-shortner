@@ -1,7 +1,7 @@
 import { Client } from 'pg'
 import logger from './logger.service'
 
-interface PostgresServiceInput {
+export interface PostgresServiceInput {
   username: string
   password: string
   host: string

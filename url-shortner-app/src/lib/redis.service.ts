@@ -2,7 +2,7 @@ import { RedisClientType, createClient } from 'redis'
 import { URL } from 'node:url'
 import logger from './logger.service'
 
-interface RedisServiceInput {
+export interface RedisServiceInput {
   host: string
   port: number
   username: string
