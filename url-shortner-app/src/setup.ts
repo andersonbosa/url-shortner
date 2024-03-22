@@ -1,10 +1,11 @@
 import config from './config'
+import logger from './lib/logger.service'
 import PostgresService from './lib/postgres.service'
 
 const QUERIES = {
   createTable: /* SQL */`
-    CREATE TABLE IF NOT EXISTS url_shortner_db (
-      id SERIAL PRIMARY KEY
+    CREATE TABLE IF NOT EXISTS "url-shortner-db" (
+      id SERIAL PRIMARY KEY,
       code TEXT UNIQUE,
       original_url TEXT,
       created_at timestamp DEFAULT CURRENT_TIMESTAMP
@@ -13,26 +14,20 @@ const QUERIES = {
 }
 
 async function setup () {
-  const postgresService = new PostgresService({
-    host: config.database.postgres.host,
-    port: config.database.postgres.port,
-    database: config.database.postgres.database,
-    username: config.database.postgres.username,
-    password: config.database.postgres.password,
-  })
+  const postgresService = new PostgresService(config.database.postgres)
 
-  
   try {
+    const isHealth = await postgresService.healthCheck()
+    if (!isHealth) {
+      throw new Error('postgresService.healthCheck failed')
+    }
+
     await postgresService.connect()
-
     await postgresService.query(QUERIES.createTable)
-    
-
-    console.log('✅ Setup done successfully.')
+    logger.info('✅ Setup done successfully.')
 
   } catch (error) {
-    console.log('❌ Setup did not happen due to a error.')
-
+    logger.error('❌ Setup did not happen due to a error.')
     throw error
 
   } finally {
