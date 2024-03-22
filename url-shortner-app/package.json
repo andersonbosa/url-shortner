@@ -9,14 +9,16 @@
   "license": "ISC",
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
+    "dev:nodemon": "nodemon --inspect ./src/server.ts",
     "dev": "tsx --watch ./src/server.ts",
-    "setup": "tsx ./src/setup.ts",
+    "setup": "tsx --inspect ./src/setup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.30",
     "@types/pg": "^8.11.4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },

@@ -1,0 +1,22 @@
+{
+  "verbose": true,
+  "restartable": "rs",
+  "ext": "ts,json",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "node_modules/**/node_modules",
+    "**/src/logs/**",
+    "*.test.js",
+    "**/fixtures/**"
+  ],
+  "execMap": {
+    "ts": "node --require dotenv/config --require ts-node/register"
+  },
+  "watch": [
+    "src/"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

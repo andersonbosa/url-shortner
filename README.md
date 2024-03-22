@@ -32,10 +32,10 @@ To use the template, check some of the validations to be made in [template-check
 
 <h2 id="technologies"> 🛠️ Technologies</h2>
 
-* [Markdown](https://www.markdownguide.org/) - used in documentations
-* [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) - used in project banner
-* [XHTML](https://www.w3docs.com/learn-html/xhtml-extensible-hypertext-markup-language.html) - used in project banner to add our style
+#### URL Shortner
 
+- [Neon.tech](https://neon.tech)
+- [Upstash.com](https://upstash.com)
 
 <h2 id="getting-started"> 🚶 Getting Started</h2>
 
