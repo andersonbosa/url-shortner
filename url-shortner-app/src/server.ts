@@ -3,7 +3,7 @@ import { z } from 'zod'
 import config from './config'
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
-import { createRedisService } from './lib/redis.service'
+import createRedisService from './lib/redis.service'
 
 const fastifyServer = fastify()
 
@@ -13,6 +13,8 @@ const dependencyContainer = {
     redis: createRedisService(config.database.redis),
   }
 }
+
+dependencyContainer.services.redis.connect()
 
 fastifyServer.get('/:code', async (request, reply) => {
   const getLinkSchema = z.object({
@@ -28,7 +30,7 @@ fastifyServer.get('/:code', async (request, reply) => {
 
   const foundLink = results[0]
 
-  await dependencyContainer.services.redis.zIncBy()
+  await dependencyContainer.services.redis.zIncrBy('metrics', 1, String(foundLink.id))
 
   return reply.redirect(301, foundLink.original_url)
 })
