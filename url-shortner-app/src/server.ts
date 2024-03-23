@@ -17,6 +17,7 @@ const dependencyContainer = {
 dependencyContainer.services.redis.connect()
 
 fastifyServer.get('/:code', async (request, reply) => {
+  logger.debug('GET /:code')
   const getLinkSchema = z.object({
     code: z.string().min(8),
   })
@@ -37,6 +38,8 @@ fastifyServer.get('/:code', async (request, reply) => {
 
 
 fastifyServer.get('/api/links', async (request, reply) => {
+  logger.debug('GET /api/links')
+  
   const results = await dependencyContainer.services.postgres/* sql */`
   SELECT *
   FROM "url-shortner-db"
@@ -46,6 +49,8 @@ fastifyServer.get('/api/links', async (request, reply) => {
 })
 
 fastifyServer.post('/api/links', async (request, reply) => {
+  logger.debug('POST /api/links')
+
   const createLinkSchema = z.object({
     code: z.string().min(8),
     url: z.string().url(),
