@@ -76,6 +76,5 @@ fastifyServer.listen({
   .then(
     () => {
       logger.info('🚀 HTTP server is running')
-      // logger.info(config)
     }
   )
