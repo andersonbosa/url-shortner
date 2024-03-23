@@ -14,6 +14,15 @@ const dependencyContainer = {
   }
 }
 
+fastifyServer.get('/api/links', async (request, reply) => {
+  const result = await dependencyContainer.services.postgres/* sql */`
+  SELECT *
+  FROM "url-shortner-db"
+  ORDER BY created_at DESC`
+
+  return result
+})
+
 fastifyServer.post('/api/links', async (request, reply) => {
   const createLinkSchema = z.object({
     code: z.string().min(3),
