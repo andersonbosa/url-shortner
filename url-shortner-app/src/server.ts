@@ -102,6 +102,19 @@ fastifyServer.post('/api/links', async (request, reply) => {
 })
 
 
+fastifyServer.get('/metrics', async (request, reply) => {
+  const results = await dependencyContainer.services.redis.zRangeByScoreWithScores('metrics', 0, 50)
+
+  const mappedResults = results
+    .sort((a: any, b: any) => a.score - b.score)
+    .map(item => ({
+      shortLinkId: Number(item.value),
+      clicks: item.score,
+    }))
+
+  return mappedResults
+})
+
 fastifyServer.listen({ port: config.http.port })
   .then(
     () => {
