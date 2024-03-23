@@ -16,7 +16,7 @@ const logger = pino(
         target: 'pino/file',
         options: {
           destination: logFileName,
-          append: false,
+          // append: false,
         }
       },
       {
