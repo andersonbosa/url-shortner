@@ -3,14 +3,14 @@ import { z } from 'zod'
 import config from './config'
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
-import RedisService, { RedisServiceInput } from './lib/redis.service'
+import { createRedisService } from './lib/redis.service'
 
 const fastifyServer = fastify()
 
 const dependencyContainer = {
   services: {
     postgres: createPostgreService(config.database.postgres),
-    redis: new RedisService(config.database.redis as RedisServiceInput).connect(),
+    redis: createRedisService(config.database.redis),
   }
 }
 
@@ -25,8 +25,10 @@ fastifyServer.get('/:code', async (request, reply) => {
   SELECT id, original_url
   FROM "url-shortner-db"
   WHERE code = ${code}`
-  
+
   const foundLink = results[0]
+
+  await dependencyContainer.services.redis.zIncBy()
 
   return reply.redirect(301, foundLink.original_url)
 })
@@ -56,7 +58,7 @@ fastifyServer.post('/api/links', async (request, reply) => {
     RETURNING id`
 
     const createdLink = results[0]
-    
+
     return reply.status(201).send(createdLink)
 
   } catch (error) {
