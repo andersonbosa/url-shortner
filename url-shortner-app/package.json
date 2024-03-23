@@ -10,14 +10,14 @@
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
     "dev:nodemon": "nodemon --inspect ./src/server.ts",
-    "dev": "tsx --watch ./src/server.ts",
+    "dev": "tsx --inspect --watch ./src/server.ts",
     "setup:db": "tsx --inspect ./src/setup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.30",
-    "@types/pg": "^8.11.4",
+    "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
@@ -25,7 +25,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "pg": "^8.11.3",
+    "postgres": "^3.4.4",
     "redis": "^4.6.13",
     "winston": "^3.12.0",
     "zod": "^3.22.4"
