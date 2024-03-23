@@ -12,7 +12,7 @@ import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
 
 const fastifyServer = fastify({
-  logger: isProductionEnv() ? true : false,
+  logger: logger
 
   // http2: true,
   // https: {
@@ -102,9 +102,7 @@ fastifyServer.post('/api/links', async (request, reply) => {
 })
 
 
-fastifyServer.listen({
-  port: config.http.port
-})
+fastifyServer.listen({ port: config.http.port })
   .then(
     () => {
       logger.info('🚀 HTTP server is running')

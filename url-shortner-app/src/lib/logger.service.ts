@@ -1,7 +1,6 @@
-import { LoggingLevelsInRFC5424, loggingLevelsInRFC5424Reference } from './../config';
-import { join } from 'path'
-import config from '../config'
-import pino from 'pino'
+import { join } from 'path';
+import pino from 'pino';
+import config from '../config';
 
 
 const loggingConfig = config.logging
