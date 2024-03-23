@@ -2,6 +2,6 @@ POST http://localhost:3000/api/links
 Content-Type: application/json
 
 {
-    "code": "awesoasdasdmecode",
-    "url": "https://minify.me/123456789"
+    "code": "andersonbosa",
+    "url": "https://andersonbosa.vercel.app"
 }

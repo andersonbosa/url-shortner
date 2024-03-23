@@ -21,22 +21,24 @@ fastifyServer.get('/:code', async (request, reply) => {
 
   const { code } = getLinkSchema.parse(request.params)
 
-  const result = await dependencyContainer.services.postgres/* sql */`
+  const results = await dependencyContainer.services.postgres/* sql */`
   SELECT id, original_url
   FROM "url-shortner-db"
   WHERE code = ${code}`
   
-  return result
+  const foundLink = results[0]
+
+  return reply.redirect(301, foundLink.original_url)
 })
 
 
 fastifyServer.get('/api/links', async (request, reply) => {
-  const result = await dependencyContainer.services.postgres/* sql */`
+  const results = await dependencyContainer.services.postgres/* sql */`
   SELECT *
   FROM "url-shortner-db"
   ORDER BY created_at DESC`
 
-  return result
+  return results
 })
 
 fastifyServer.post('/api/links', async (request, reply) => {
@@ -52,7 +54,9 @@ fastifyServer.post('/api/links', async (request, reply) => {
     INSERT INTO "url-shortner-db" (code, original_url)
     VALUES (${code}, ${url})
     RETURNING id`
+
     const createdLink = results[0]
+    
     return reply.status(201).send(createdLink)
 
   } catch (error) {
