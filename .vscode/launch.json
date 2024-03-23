@@ -18,7 +18,6 @@
       "name": "Launch server",
       "type": "node",
       "request": "launch",
-      // "runtimeExecutable": "/home/t4inha/.nvm/versions/node/v20.10.0/bin/node",
       "skipFiles": [
         "<node_internals>/**"
       ],
@@ -28,7 +27,8 @@
         "!**/node_modules/**"
       ],
       "envFile": "${workspaceFolder}/url-shortner-app/.env",
-      "preLaunchTask": "tsc: watch - url-shortner-app"
+      "preLaunchTask": "tsc: watch - url-shortner-app",
+      "runtimeExecutable": "/home/t4inha/.nvm/versions/node/v20.10.0/bin/node",
     },
     {
       "name": "Debug file",
@@ -45,18 +45,20 @@
       "envFile": "${workspaceFolder}/url-shortner-app/.env",
       "preLaunchTask": "tsc: watch - url-shortner-app"
     },
-    // {
-    //   "name": "nodemon",
-    //   "type": "node",
-    //   "console": "integratedTerminal",
-    //   "internalConsoleOptions": "neverOpen",
-    //   "request": "launch",
-    //   "restart": true,
-    //   "program": "${workspaceFolder}/${relativeFile}",
-    //   "runtimeExecutable": "nodemon",
-    //   "skipFiles": [
-    //     "<node_internals>/**"
-    //   ],
-    // },
+    {
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "name": "nodemon",
+      "program": "${workspaceFolder}/src/server.ts",
+      "request": "launch",
+      "restart": true,
+      "runtimeExecutable": "nodemon",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "envFile": "${workspaceFolder}/url-shortner-app/.env",
+      "args": ["--inspect"]
+    }
   ],
 }
