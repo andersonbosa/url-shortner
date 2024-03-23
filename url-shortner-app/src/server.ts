@@ -1,6 +1,12 @@
 import fastify from 'fastify'
+import cors from '@fastify/cors'
+import helmet from '@fastify/helmet'
+import fastifyRateLimit from '@fastify/rate-limit'
+
 import { z } from 'zod'
+
 import config, { isProductionEnv } from './config'
+
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
@@ -14,6 +20,13 @@ const fastifyServer = fastify({
   //    key: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.key')),
   //    cert: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.cert'))
   // }
+})
+
+fastifyServer.register(cors, {})
+fastifyServer.register(helmet, {})
+fastifyServer.register(fastifyRateLimit, {
+  max: 32,
+  timeWindow: '1 minute'
 })
 
 const dependencyContainer = {
