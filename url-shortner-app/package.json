@@ -18,6 +18,7 @@
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.30",
     "nodemon": "^3.1.0",
+    "pino-pretty": "^11.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
@@ -25,6 +26,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
+    "pino": "^8.19.0",
     "postgres": "^3.4.4",
     "redis": "^4.6.13",
     "winston": "^3.12.0",

@@ -18,7 +18,7 @@ interface PostgresConfig {
 }
 
 /* https://tools.ietf.org/html/rfc5424 */
-type LoggingLevelsInRFC5424 = {
+export type LoggingLevelsInRFC5424 = {
   0: 'emerg'
   1: 'alert'
   2: 'crit'
@@ -29,12 +29,24 @@ type LoggingLevelsInRFC5424 = {
   7: 'debug'
 }
 
+export const loggingLevelsInRFC5424Reference: Record<LoggingLevelsInRFC5424[keyof LoggingLevelsInRFC5424], number> = {
+  emerg: 0,
+  alert: 10,
+  crit: 20,
+  error: 30,
+  warning: 40,
+  notice: 50,
+  info: 60,
+  debug: 70
+}
+
 interface LoggingConfig {
   level: LoggingLevelsInRFC5424[keyof LoggingLevelsInRFC5424]
   fileName?: string
 }
 
 interface AppConfig {
+  environment: 'production' | 'development' | 'test' | string
   http: {
     port: number
   }
@@ -61,7 +73,7 @@ const defaultPostgresConfig: PostgresConfig = {
   database: 'default_database',
 }
 
-function generateLogFileName (
+function generateLogFileName(
   includeTime: boolean = false
 ): string {
 
@@ -99,7 +111,7 @@ const defaultLoggingConfig: LoggingConfig = {
  * @param {Partial<T>} source - The source object containing the values to merge.
  * @returns {T} - The merged object with the same keys as the target object.
  */
-function mergeObjects<T extends Record<string, any>> (target: T, source: Partial<T>): T {
+function mergeObjects<T extends Record<string, any>>(target: T, source: Partial<T>): T {
   const merged: Partial<T> = {}
   for (const key in target) {
     if (Object.prototype.hasOwnProperty.call(target, key)) {
@@ -114,6 +126,8 @@ function mergeObjects<T extends Record<string, any>> (target: T, source: Partial
 }
 
 const config: AppConfig = {
+  environment: process.env.NODE_ENV ?? 'development',
+
   http: {
     port: Number(process.env.SERVER_PORT ?? 3333)
   },
@@ -148,5 +162,7 @@ const config: AppConfig = {
     }
   )
 }
+
+export const isProductionEnv = (): boolean => config.environment === 'production'
 
 export default config

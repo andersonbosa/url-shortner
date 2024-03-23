@@ -1,11 +1,20 @@
 import fastify from 'fastify'
 import { z } from 'zod'
-import config from './config'
+import config, { isProductionEnv } from './config'
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
 
-const fastifyServer = fastify()
+const fastifyServer = fastify({
+  logger: isProductionEnv() ? true : false,
+
+  // http2: true,
+  // https: {
+  //    allowHTTP1: true, // fallback support for HTTP1
+  //    key: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.key')),
+  //    cert: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.cert'))
+  // }
+})
 
 const dependencyContainer = {
   services: {
@@ -39,7 +48,7 @@ fastifyServer.get('/:code', async (request, reply) => {
 
 fastifyServer.get('/api/links', async (request, reply) => {
   logger.debug('GET /api/links')
-  
+
   const results = await dependencyContainer.services.postgres/* sql */`
   SELECT *
   FROM "url-shortner-db"
@@ -78,6 +87,7 @@ fastifyServer.post('/api/links', async (request, reply) => {
     return reply.status(500).send({ message: 'Internal Server Error.' })
   }
 })
+
 
 fastifyServer.listen({
   port: config.http.port
