@@ -1,19 +1,39 @@
-import fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import fastifyRateLimit from '@fastify/rate-limit'
+import staticServer from '@fastify/static'
+import fastify from 'fastify'
 
+import { join } from 'path'
 import { z } from 'zod'
 
-import config, { isProductionEnv } from './config'
+import config from './config'
 
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
 
+const dependencyContainer = {
+  services: {
+    postgres: createPostgreService(config.database.postgres),
+    redis: createRedisService(config.database.redis),
+  },
+
+  plugins: {
+    staticServer: {
+      paths: {
+        public: join(__dirname, 'public'),
+        pages: join(__dirname, 'public/pages'),
+        assets: join(__dirname, 'public/assets'),
+      }
+    }
+  }
+}
+
+dependencyContainer.services.redis.connect()
+
 const fastifyServer = fastify({
   logger: logger
-
   // http2: true,
   // https: {
   //    allowHTTP1: true, // fallback support for HTTP1
@@ -29,17 +49,29 @@ fastifyServer.register(fastifyRateLimit, {
   timeWindow: '1 minute'
 })
 
-const dependencyContainer = {
-  services: {
-    postgres: createPostgreService(config.database.postgres),
-    redis: createRedisService(config.database.redis),
-  }
-}
+fastifyServer.register(staticServer, {
+  root: dependencyContainer.plugins.staticServer.paths.public,
+  prefixAvoidTrailingSlash: true,
+  wildcard: false,
+  serveDotFiles: false,
+  index: ['index', 'index.html', 'index.htm', '/'],
+})
 
-dependencyContainer.services.redis.connect()
+fastifyServer.register(staticServer, {
+  root: dependencyContainer.plugins.staticServer.paths.assets,
+  // prefix: '/public/',
+  decorateReply: false,
+  // prefixAvoidTrailingSlash: true,
+  wildcard: true,
+  serveDotFiles: false,
+})
 
-fastifyServer.get('/:code', async (request, reply) => {
-  logger.debug('GET /:code')
+
+fastifyServer.get('/', async (_, reply) => {
+  return reply.sendFile('index.html', join(dependencyContainer.plugins.staticServer.paths.pages))
+})
+
+fastifyServer.get('/code/:code', async (request, reply) => {
   const getLinkSchema = z.object({
     code: z.string().min(8),
   })
@@ -53,6 +85,10 @@ fastifyServer.get('/:code', async (request, reply) => {
 
   const foundLink = results[0]
 
+  if (!foundLink) {
+    return reply.status(400).send({ message: 'Something goes wrong!' })
+  }
+
   await dependencyContainer.services.redis.zIncrBy('metrics', 1, String(foundLink.id))
 
   return reply.redirect(301, foundLink.original_url)
@@ -60,8 +96,6 @@ fastifyServer.get('/:code', async (request, reply) => {
 
 
 fastifyServer.get('/api/links', async (request, reply) => {
-  logger.debug('GET /api/links')
-
   const results = await dependencyContainer.services.postgres/* sql */`
   SELECT *
   FROM "url-shortner-db"
@@ -71,8 +105,6 @@ fastifyServer.get('/api/links', async (request, reply) => {
 })
 
 fastifyServer.post('/api/links', async (request, reply) => {
-  logger.debug('POST /api/links')
-
   const createLinkSchema = z.object({
     code: z.string().min(8),
     url: z.string().url(),
@@ -115,9 +147,11 @@ fastifyServer.get('/metrics', async (request, reply) => {
   return mappedResults
 })
 
-fastifyServer.listen({ port: config.http.port })
-  .then(
-    () => {
-      logger.info('🚀 HTTP server is running')
-    }
-  )
+fastifyServer.listen(
+  { port: config.http.port },
+  (err: any, address: string) => {
+    if (err) throw err
+
+    logger.info(`🚀 HTTP server is running at ${address}`)
+  }
+)
