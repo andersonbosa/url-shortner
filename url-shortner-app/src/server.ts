@@ -51,16 +51,16 @@ fastifyServer.register(fastifyRateLimit, {
 
 fastifyServer.register(staticServer, {
   root: dependencyContainer.plugins.staticServer.paths.public,
+  index: ['index', 'index.html', 'index.htm', '/'],
   prefixAvoidTrailingSlash: true,
   wildcard: false,
   serveDotFiles: false,
-  index: ['index', 'index.html', 'index.htm', '/'],
 })
 
 fastifyServer.register(staticServer, {
   root: dependencyContainer.plugins.staticServer.paths.assets,
-  // prefix: '/public/',
   decorateReply: false,
+  prefix: '/assets/',
   // prefixAvoidTrailingSlash: true,
   wildcard: true,
   serveDotFiles: false,
