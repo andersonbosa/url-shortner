@@ -187,6 +187,6 @@ fastifyServer.listen(
   (err: any, address: string) => {
     if (err) throw err
 
-    logger.info(`🚀 HTTP server is running at ${address}`)
+    logger.info(`🚀 Fastify server is running at ${address}`)
   }
 )

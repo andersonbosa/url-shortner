@@ -3,9 +3,18 @@ info:
   title: URL Shortener App API
   description: API documentation for the URL Shortener App
   version: 1.0.0
+  contact:
+    name: Anderson Bosa
+    email: andersonbosa0@gmail.com
+    url: 'https://andersonbosa.vercel.app'
+
+
 servers:
 - url: http://localhost:3000
   desciption: Local development server
+- url: https://example.com
+  desciption: Production server
+
 paths:
   /code/{code}:
     get:
