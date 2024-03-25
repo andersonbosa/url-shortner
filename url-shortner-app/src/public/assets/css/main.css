@@ -41,8 +41,54 @@ input[type="submit"]:hover {
   filter: brightness(1.2);
 }
 
+button {
+  filter: brightness(1.2);
+}
+
 .result {
   margin-top: 20px;
   font-weight: bold;
   color: #333;
+}
+
+/* docs button */
+#docsButtonWrapper {
+  display: inline-block;
+  position: absolute;
+  right: 32px;
+  top: 32px;
+}
+
+#docsButton {
+  border: none;
+  width: 40px;
+  height: 40px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#docsButton:hover {
+  width: 120px;
+  background-color: #45a049;
+}
+
+#docsButton::before {
+  content: '?';
+}
+
+#docsButton:hover::before {
+  content: '';
+}
+
+#docsButton:hover::after {
+  content: 'Open API documentation';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: white;
 }
