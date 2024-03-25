@@ -10,19 +10,26 @@ export interface PostgresServiceInput {
   connectionUrl?: string
 }
 
-export const createPostgreService = (input: PostgresServiceInput): postgres.Sql<{}> => {
+export type PostgresServiceType = postgres.Sql<{}>
+
+export const createPostgreService = (input: PostgresServiceInput): PostgresServiceType => {
   if (input.connectionUrl) {
-    logger.debug(`PostgresSQL service created using connection url ${input.connectionUrl}`)
+    logger.info(`PostgresSQL service created using connection url: "${input.connectionUrl}"`)
     return postgres(input.connectionUrl)
   }
 
-  logger.debug('PostgresSQL service created')
-  return postgres({
-    host: input.host,
-    port: input.port,
-    database: input.database,
-    username: input.username,
-    password: input.password,
-  })
+  if (input.host && input.port && input.database && input.username && input.password) {
+    logger.info('PostgresSQL service created')
+    return postgres({
+      host: input.host,
+      port: input.port,
+      database: input.database,
+      username: input.username,
+      password: input.password,
+    })
+  }
+
+  throw new Error('Incomplete PostgreSQL service configuration.')
 }
+
 export default createPostgreService

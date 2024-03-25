@@ -62,13 +62,13 @@ interface AppConfig {
 /* Default Values */
 
 const defaultRedisConfig: RedisConfig = {
-  host: 'localhost',
+  host: 'default_host',
   port: 6379,
-  password: 'docker',
+  password: 'default_docker',
 }
 
 const defaultPostgresConfig: PostgresConfig = {
-  host: 'localhost',
+  host: 'default_host',
   port: 5432,
   username: 'default_username',
   password: 'default_password',
@@ -105,25 +105,27 @@ const defaultLoggingConfig: LoggingConfig = {
 /* App Configuration  */
 
 /**
- * Merges two objects, keeping only the keys from the target object and replacing their values
- * with the corresponding values from the source object, if defined.
+ * Merges two objects, keeping only the keys from the preferedProps object and replacing their values
+ * with the corresponding values from the preferedProps object, if defined.
  * 
  * @template T - The type of the target object.
- * @param {T} target - The target object from which to keep the keys.
- * @param {Partial<T>} source - The source object containing the values to merge.
+ * @param {T} defaultProps - The target object from which to keep the keys.
+ * @param {Partial<T>} preferedProps - The source object containing the values to merge.
  * @returns {T} - The merged object with the same keys as the target object.
  */
-function mergeObjects<T extends Record<string, any>>(target: T, source: Partial<T>): T {
-  const merged: Partial<T> = {}
-  for (const key in target) {
-    if (Object.prototype.hasOwnProperty.call(target, key)) {
-      if (source[key] !== undefined && source[key] !== "") {
-        merged[key] = source[key]
+function mergeObjects<T extends Record<string, any>>(defaultProps: T, preferedProps: Partial<T>): T {
+  const merged: Partial<T> = Object.assign(defaultProps, preferedProps)
+
+  for (const key in defaultProps) {
+    if (Object.prototype.hasOwnProperty.call(defaultProps, key)) {
+      if (preferedProps[key] !== undefined && preferedProps[key] !== "") {
+        merged[key] = preferedProps[key]
       } else {
-        merged[key] = target[key]
+        merged[key] = defaultProps[key]
       }
     }
   }
+
   return merged as T
 }
 

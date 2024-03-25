@@ -1,6 +1,6 @@
 import { URL } from 'node:url'
+import { createClient, RedisClientType } from 'redis'
 import logger from './logger.service'
-import { createClient } from 'redis'
 export interface RedisServiceInput {
   host?: string
   port?: number
@@ -8,25 +8,31 @@ export interface RedisServiceInput {
   connectionUrl?: string
 }
 
+export type RedisServiceType = RedisClientType
 
-const createRedisService = (input: RedisServiceInput) => {
+const createRedisService = (input: RedisServiceInput): RedisServiceType => {
   if (input.connectionUrl) {
-    logger.debug(`Redis service created with connection url ${input.connectionUrl}`)
+    logger.info(`Redis service created with connection url: "${input.connectionUrl}"`)
     return createClient({ url: input.connectionUrl })
   }
 
   if (input.host && input.port && input.password) {
-    const urlObj = new URL('redis://')
-    urlObj.hostname = input.host
-    urlObj.port = input.port.toString()
-    urlObj.password = input.password ?? ''
-
-    input.connectionUrl = urlObj.toString()
-    logger.debug('Redis service created')
-    return createClient({ url: input.connectionUrl })
+    logger.info('Redis service created')
+    const connectionUrl = buildConnectionUrl(input.host, input.port, input.password)
+    return createClient({ url: connectionUrl })
   }
 
-  throw new Error('Problem during the creation of the Redis service')
+  throw new Error('Incomplete Redis service configuration.')
+}
+
+const buildConnectionUrl = (host: string, port: number, password?: string): string => {
+  const urlObj = new URL('redis://')
+  urlObj.hostname = host
+  urlObj.port = port.toString()
+  if (password) {
+    urlObj.password = password
+  }
+  return urlObj.toString()
 }
 
 export default createRedisService
