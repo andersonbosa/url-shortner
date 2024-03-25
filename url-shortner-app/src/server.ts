@@ -2,6 +2,8 @@ import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import fastifyRateLimit from '@fastify/rate-limit'
 import staticServer from '@fastify/static'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 
 import { join } from 'path'
@@ -26,6 +28,10 @@ const dependencyContainer = {
         pages: join(__dirname, 'public/pages'),
         assets: join(__dirname, 'public/assets'),
       }
+    },
+    swagger: {
+      staticFilePath: join(__dirname, 'public'),
+      staticFileName: 'swagger.yaml',
     }
   }
 }
@@ -66,6 +72,35 @@ fastifyServer.register(staticServer, {
   serveDotFiles: false,
 })
 
+fastifyServer.register(
+  fastifySwagger,
+  {
+    mode: 'static',
+    specification: {
+      path: join(dependencyContainer.plugins.swagger.staticFilePath, dependencyContainer.plugins.swagger.staticFileName),
+      baseDir: dependencyContainer.plugins.swagger.staticFilePath,
+      postProcessor: (swaggerObject) => {
+        return swaggerObject
+      },
+    },
+  }
+)
+
+fastifyServer.register(fastifySwaggerUi, {
+  routePrefix: '/api/docs',
+  uiConfig: {
+    docExpansion: 'full',
+    deepLinking: false
+  },
+  // uiHooks: {
+  //   onRequest: function (request, reply, next) { next() },
+  //   preHandler: function (request, reply, next) { next() }
+  // },
+  // staticCSP: true,
+  // transformStaticCSP: (header) => header,
+  // transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
+  // transformSpecificationClone: true
+})
 
 fastifyServer.get('/', async (_, reply) => {
   return reply.sendFile('index.html', join(dependencyContainer.plugins.staticServer.paths.pages))
@@ -134,7 +169,7 @@ fastifyServer.post('/api/links', async (request, reply) => {
 })
 
 
-fastifyServer.get('/metrics', async (request, reply) => {
+fastifyServer.get('/api/metrics', async (request, reply) => {
   const results = await dependencyContainer.services.redis.zRangeByScoreWithScores('metrics', 0, 50)
 
   const mappedResults = results

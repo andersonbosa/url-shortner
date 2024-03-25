@@ -19,7 +19,7 @@ urlForm.addEventListener('submit', async (event) => {
         })
 
         if (response.status === 201) {
-            const shortenedUrl = `${window.location.origin}/${code}`
+            const shortenedUrl = `${window.location.origin}/code/${code}`
             resultDiv.innerText = `Shortened URL: ${shortenedUrl}`
         } else {
             resultDiv.innerText = 'An error occurred. Please try again.'

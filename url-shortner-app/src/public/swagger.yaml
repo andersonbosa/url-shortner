@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener App API
+  description: API documentation for the URL Shortener App
+  version: 1.0.0
+servers:
+- url: http://localhost:3000
+  desciption: Local development server
+paths:
+  /code/{code}:
+    get:
+      summary: Redirect to the original URL based on the provided code
+      parameters:
+      - in: path
+        name: code
+        required: true
+        description: The code representing the shortened URL
+        schema:
+          type: string
+          minLength: 8
+      responses:
+        '301':
+          description: Redirect to the original URL
+  /api/links:
+    get:
+      summary: Retrieve all shortened URLs
+      responses:
+        '200':
+          description: List of shortened URLs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+    post:
+      summary: Shorten a new URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  minLength: 8
+                url:
+                  type: string
+                  format: url
+      responses:
+        '201':
+          description: URL successfully shortened
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The ID of the shortened URL
+        '400':
+          description: Bad request - invalid input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+  /api/metrics:
+    get:
+      summary: Retrieve metrics for shortened URLs
+      responses:
+        '200':
+          description: List of URL metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    shortLinkId:
+                      type: integer
+                      description: The ID of the shortened URL
+                    clicks:
+                      type: number
+                      description: Number of clicks on the shortened URL
