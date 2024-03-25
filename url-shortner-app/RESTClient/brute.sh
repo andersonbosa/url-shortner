@@ -4,5 +4,7 @@ target=$2
 
 for (( i = 1; i <= $hits; i++ )); do
     echo "[$hits/$i] Target: $target"
-    curl --head -Lk $target
+    # response=$(curl -Lk $target)
+    curl --head -Lk -s $target | grep HTTP
+    # 
 done

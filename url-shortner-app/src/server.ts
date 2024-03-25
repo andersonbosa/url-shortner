@@ -56,8 +56,12 @@ const fastifyServer = fastify({
 fastifyServer.register(cors, {})
 fastifyServer.register(helmet, {})
 fastifyServer.register(fastifyRateLimit, {
-  max: 2,
-  timeWindow: '1 minute'
+  global: true,
+  max: 32,
+  ban: 64,
+  timeWindow: '1 minutes',
+  cache: 10 * 1000/* ms */,
+  allowList: [],
 })
 
 fastifyServer.register(staticServer, {
@@ -196,7 +200,7 @@ const startInfra = async () => {
     (err: any, address: string) => {
       if (err) throw err
 
-      logger.info(`🚀 Fastify server is running at ${address}`)
+      logger.debug(`🚀 Fastify server is running at ${address}`)
     }
   )
 }

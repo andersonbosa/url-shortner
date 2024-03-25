@@ -22,8 +22,9 @@ const logger = pino(
         level: loggingConfig.level,
         target: 'pino-pretty',
         options: {
-          translateTime: 'HH:MM:ss Z',
-          ignore: 'pid,hostname',
+          // translateTime: 'HH:MM:ss Z',
+          translateTime: 'UTC:yyyy-mm-dd \'T\'HH:MM:ss \'Z\'',
+          ignore: 'pid',
         },
       },
     ]
