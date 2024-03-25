@@ -13,4 +13,6 @@ connect-postgres:
 
 connect-redis:
 	docker run --rm -it --network=host bitnami/redis redis-cli -h $(DB_REDIS_HOST) -a $(DB_REDIS_PASSWORD)
-	
+
+generate-certificates:
+	openssl req -newkey rsa:2048 -nodes -keyout https/fastify.key -x509 -days 365 -out https/fastify.cert

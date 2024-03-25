@@ -14,6 +14,7 @@ import config from './config'
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
+import { readFileSync } from 'fs'
 
 const dependencyContainer = {
   services: {
@@ -39,13 +40,13 @@ const dependencyContainer = {
 dependencyContainer.services.redis.connect()
 
 const fastifyServer = fastify({
-  logger: logger
-  // http2: true,
-  // https: {
-  //    allowHTTP1: true, // fallback support for HTTP1
-  //    key: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.key')),
-  //    cert: fs.readFileSync(path.join(__dirname, '..', 'https', 'fastify.cert'))
-  // }
+  logger: logger,
+  http2: true,
+  https: {
+     allowHTTP1: true, // fallback support for HTTP1
+     key: readFileSync(join(__dirname, '..', 'https', 'fastify.key')),
+     cert: readFileSync(join(__dirname, '..', 'https', 'fastify.cert'))
+  }
 })
 
 fastifyServer.register(cors, {})
