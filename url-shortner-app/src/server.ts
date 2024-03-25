@@ -9,7 +9,7 @@ import fastify from 'fastify'
 import { join } from 'path'
 import { z } from 'zod'
 
-import config from './config'
+import config, { isProductionEnv } from './config'
 
 import { readFileSync } from 'fs'
 import logger from './lib/logger.service'
@@ -37,15 +37,22 @@ const dependencyContainer = {
   }
 }
 
+const httpsFastifyOption = isProductionEnv() ?
+  {
+    http2: true,
+    https: {
+      allowHTTP1: true, // fallback support for HTTP1
+      key: readFileSync(join(__dirname, '..', 'https', 'fastify.key')),
+      cert: readFileSync(join(__dirname, '..', 'https', 'fastify.cert'))
+    }
+  }
+  : {}
+
+console.log('isProductionEnv', isProductionEnv(), process.env.NODE_ENV)
 
 const fastifyServer = fastify({
   logger: logger,
-  http2: true,
-  https: {
-    allowHTTP1: true, // fallback support for HTTP1
-    key: readFileSync(join(__dirname, '..', 'https', 'fastify.key')),
-    cert: readFileSync(join(__dirname, '..', 'https', 'fastify.cert'))
-  }
+  ...httpsFastifyOption
 })
 
 fastifyServer.register(cors, {})
@@ -112,7 +119,7 @@ fastifyServer.get('/code/:code', async (request, reply) => {
   })
 
   const { code } = getLinkSchema.parse(request.params)
-  
+
   const results = await dependencyContainer.services.postgres/* sql */`
   SELECT id, original_url
   FROM "url-shortner-db"
