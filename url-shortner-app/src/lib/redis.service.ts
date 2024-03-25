@@ -14,6 +14,10 @@ const createRedisService = (input: RedisServiceInput) => {
   urlObj.password = input.password ?? ''
 
   const client = createClient({ url: urlObj.toString() })
+
+  client.on('error', (err: any) => {
+    throw err
+  })
   logger.debug('Redis service created')
   return client
 }
