@@ -4,18 +4,18 @@ dotenv.config()
 /* Interfaces */
 
 interface RedisConfig {
-  host?: string
-  port?: number
-  password?: string
+  host: string
+  port: number
+  password: string
   connectionUrl?: string
 }
 
 interface PostgresConfig {
-  host?: string
-  port?: number
-  username?: string
-  password?: string
-  database?: string
+  host: string
+  port: number
+  username: string
+  password: string
+  database: string
   connectionUrl?: string
 }
 
@@ -102,8 +102,18 @@ const defaultLoggingConfig: LoggingConfig = {
   fileName: generateLogFileName()
 }
 
-/* App Configuration  */
 
+
+const parseConnectionUrl = (url: string): Partial<PostgresConfig | RedisConfig> => {
+  const urlObj = new URL(url)
+  return {
+    port: Number(urlObj.port),
+    host: urlObj.hostname,
+    database: urlObj.pathname.replaceAll('/', ''),
+    username: urlObj.username,
+    password: urlObj.password,
+  }
+}
 /**
  * Merges two objects, keeping only the keys from the preferedProps object and replacing their values
  * with the corresponding values from the preferedProps object, if defined.
@@ -129,6 +139,51 @@ function mergeObjects<T extends Record<string, any>>(defaultProps: T, preferedPr
   return merged as T
 }
 
+
+
+function parseRedisConfig(): RedisConfig {
+  let dbRedisConfig = mergeObjects(
+    defaultRedisConfig,
+    {
+      host: process.env.DB_REDIS_HOST,
+      port: Number(process.env.DB_REDIS_PORT),
+      password: process.env.DB_REDIS_PASSWORD,
+      connectionUrl: process.env.DB_REDIS_CONNECTION_URL,
+    }
+  )
+
+  if (dbRedisConfig.connectionUrl) {
+    const configParsedFromConnectionUrl = parseConnectionUrl(dbRedisConfig.connectionUrl)
+    dbRedisConfig = Object.assign(dbRedisConfig, configParsedFromConnectionUrl)
+  }
+
+  return dbRedisConfig
+}
+
+function parsePostgresConfig(): PostgresConfig {
+  let dbPostgresConfig = mergeObjects(
+    defaultPostgresConfig,
+    {
+      host: process.env.DB_POSTGRES_HOST,
+      port: Number(process.env.DB_POSTGRES_PORT),
+      username: process.env.DB_POSTGRES_USERNAME,
+      password: process.env.DB_POSTGRES_PASSWORD,
+      database: process.env.DB_POSTGRES_DATABASE,
+      connectionUrl: process.env.DB_POSTGRES_CONNECTION_URL,
+    }
+  )
+
+  if (dbPostgresConfig.connectionUrl) {
+    const configParsedFromConnectionUrl = parseConnectionUrl(dbPostgresConfig.connectionUrl)
+    dbPostgresConfig = Object.assign(dbPostgresConfig, configParsedFromConnectionUrl)
+  }
+
+  return dbPostgresConfig
+}
+
+/**
+ * App Configuration 
+ **/ 
 const config: AppConfig = {
   environment: process.env.NODE_ENV ?? 'development',
 
@@ -137,27 +192,8 @@ const config: AppConfig = {
   },
 
   database: {
-    redis: mergeObjects(
-      defaultRedisConfig,
-      {
-        host: process.env.DB_REDIS_HOST,
-        port: Number(process.env.DB_REDIS_PORT),
-        password: process.env.DB_REDIS_PASSWORD,
-        connectionUrl: process.env.DB_REDIS_CONNECTION_URL,
-      }
-    ),
-
-    postgres: mergeObjects(
-      defaultPostgresConfig,
-      {
-        host: process.env.DB_POSTGRES_HOST,
-        port: Number(process.env.DB_POSTGRES_PORT),
-        username: process.env.DB_POSTGRES_USERNAME,
-        password: process.env.DB_POSTGRES_PASSWORD,
-        database: process.env.DB_POSTGRES_DATABASE,
-        connectionUrl: process.env.DB_POSTGRES_CONNECTION_URL,
-      }
-    ),
+    redis: parseRedisConfig(),
+    postgres: parsePostgresConfig(),
   },
 
   logging: mergeObjects(

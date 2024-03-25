@@ -37,15 +37,14 @@ const dependencyContainer = {
   }
 }
 
-dependencyContainer.services.redis.connect()
 
 const fastifyServer = fastify({
   logger: logger,
   http2: true,
   https: {
-     allowHTTP1: true, // fallback support for HTTP1
-     key: readFileSync(join(__dirname, '..', 'https', 'fastify.key')),
-     cert: readFileSync(join(__dirname, '..', 'https', 'fastify.cert'))
+    allowHTTP1: true, // fallback support for HTTP1
+    key: readFileSync(join(__dirname, '..', 'https', 'fastify.key')),
+    cert: readFileSync(join(__dirname, '..', 'https', 'fastify.cert'))
   }
 })
 
@@ -80,7 +79,7 @@ fastifyServer.register(
     specification: {
       path: join(dependencyContainer.plugins.swagger.staticFilePath, dependencyContainer.plugins.swagger.staticFileName),
       baseDir: dependencyContainer.plugins.swagger.staticFilePath,
-      postProcessor: (swaggerObject) => {
+      postProcessor: (swaggerObject: any) => {
         return swaggerObject
       },
     },
@@ -113,7 +112,7 @@ fastifyServer.get('/code/:code', async (request, reply) => {
   })
 
   const { code } = getLinkSchema.parse(request.params)
-
+  
   const results = await dependencyContainer.services.postgres/* sql */`
   SELECT id, original_url
   FROM "url-shortner-db"
@@ -183,11 +182,18 @@ fastifyServer.get('/api/metrics', async (request, reply) => {
   return mappedResults
 })
 
-fastifyServer.listen(
-  { port: config.http.port },
-  (err: any, address: string) => {
-    if (err) throw err
 
-    logger.info(`🚀 Fastify server is running at ${address}`)
-  }
-)
+const startInfra = async () => {
+  await dependencyContainer.services.redis.connect()
+
+  fastifyServer.listen(
+    { port: config.http.port },
+    (err: any, address: string) => {
+      if (err) throw err
+
+      logger.info(`🚀 Fastify server is running at ${address}`)
+    }
+  )
+}
+
+startInfra()

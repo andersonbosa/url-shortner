@@ -8,13 +8,12 @@ async function setup() {
 
   try {
     await pgService/* SQL */`
-        CREATE TABLE IF NOT EXISTS "url-shortner-db" (
-        id SERIAL PRIMARY KEY,
-        code TEXT UNIQUE,
-        original_url TEXT,
-        created_at timestamp DEFAULT CURRENT_TIMESTAMP
-        )
-    `
+      CREATE TABLE IF NOT EXISTS "url-shortner-db" (
+      id SERIAL PRIMARY KEY,
+      code TEXT UNIQUE,
+      original_url TEXT,
+      created_at timestamp DEFAULT CURRENT_TIMESTAMP
+      )`
     logger.info('✅ Setup done successfully.')
 
   } catch (error) {
