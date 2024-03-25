@@ -48,8 +48,6 @@ const httpsFastifyOption = isProductionEnv() ?
   }
   : {}
 
-console.log('isProductionEnv', isProductionEnv(), process.env.NODE_ENV)
-
 const fastifyServer = fastify({
   logger: logger,
   ...httpsFastifyOption
