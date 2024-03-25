@@ -56,7 +56,7 @@ const fastifyServer = fastify({
 fastifyServer.register(cors, {})
 fastifyServer.register(helmet, {})
 fastifyServer.register(fastifyRateLimit, {
-  max: 32,
+  max: 2,
   timeWindow: '1 minute'
 })
 

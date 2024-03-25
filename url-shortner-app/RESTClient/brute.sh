@@ -1,7 +1,8 @@
+#!/usr/bin/env bash
+hits=$1
+target=$2
 
-target=$1
-shift
-for (( i = 1; i <= 100; i++ )); do
-    echo "[$i] Target:$target"
-    curl -s $@ -- $target
+for (( i = 1; i <= $hits; i++ )); do
+    echo "[$hits/$i] Target: $target"
+    curl --head -Lk $target
 done
