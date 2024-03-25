@@ -51,6 +51,13 @@ button {
   color: #333;
 }
 
+#githubButtonWrapper {
+  display: inline-block;
+  position: absolute;
+  left: 32px;
+  bottom: 32px;
+}
+
 /* docs button */
 #docsButtonWrapper {
   display: inline-block;
