@@ -4,17 +4,19 @@ dotenv.config()
 /* Interfaces */
 
 interface RedisConfig {
-  host: string
-  port: number
-  password: string
+  host?: string
+  port?: number
+  password?: string
+  connectionUrl?: string
 }
 
 interface PostgresConfig {
-  host: string
-  port: number
-  username: string
-  password: string
-  database: string
+  host?: string
+  port?: number
+  username?: string
+  password?: string
+  database?: string
+  connectionUrl?: string
 }
 
 /* https://tools.ietf.org/html/rfc5424 */
@@ -139,6 +141,7 @@ const config: AppConfig = {
         host: process.env.DB_REDIS_HOST,
         port: Number(process.env.DB_REDIS_PORT),
         password: process.env.DB_REDIS_PASSWORD,
+        connectionUrl: process.env.DB_REDIS_CONNECTION_URL,
       }
     ),
 
@@ -150,6 +153,7 @@ const config: AppConfig = {
         username: process.env.DB_POSTGRES_USERNAME,
         password: process.env.DB_POSTGRES_PASSWORD,
         database: process.env.DB_POSTGRES_DATABASE,
+        connectionUrl: process.env.DB_POSTGRES_CONNECTION_URL,
       }
     ),
   },
