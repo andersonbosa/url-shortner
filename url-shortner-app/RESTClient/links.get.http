@@ -1,12 +1,8 @@
 
-GET http://localhost:3000/api/links
+GET https://localhost:3000/api/links
 
 
 ###
 
-GET http://localhost:3000/andersonbosa
+GET https://localhost:3000/code/andersonbosa
 
-
-###
-
-GET http://localhost:3000/docs

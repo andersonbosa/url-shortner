@@ -1,1 +1,1 @@
-GET http://localhost:3000/metrics
+GET https://localhost:3000/api/metrics
