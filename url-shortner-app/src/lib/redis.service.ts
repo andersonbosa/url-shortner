@@ -12,12 +12,12 @@ export type RedisServiceType = RedisClientType
 
 const createRedisService = (input: RedisServiceInput): RedisServiceType => {
   if (input.connectionUrl) {
-    logger.info(`Redis service created with connection url: "${input.connectionUrl}"`)
+    logger.debug(`Redis service created with connection url: "${input.connectionUrl}"`)
     return createClient({ url: input.connectionUrl })
   }
 
   if (input.host && input.port && input.password) {
-    logger.info('Redis service created')
+    logger.debug('Redis service created')
     const connectionUrl = buildConnectionUrl(input.host, input.port, input.password)
     return createClient({ url: connectionUrl })
   }

@@ -14,12 +14,12 @@ export type PostgresServiceType = postgres.Sql<{}>
 
 export const createPostgreService = (input: PostgresServiceInput): PostgresServiceType => {
   if (input.connectionUrl) {
-    logger.info(`PostgresSQL service created using connection url: "${input.connectionUrl}"`)
+    logger.debug(`PostgresSQL service created using connection url: "${input.connectionUrl}"`)
     return postgres(input.connectionUrl)
   }
 
   if (input.host && input.port && input.database && input.username && input.password) {
-    logger.info('PostgresSQL service created')
+    logger.debug('PostgresSQL service created')
     return postgres({
       host: input.host,
       port: input.port,
