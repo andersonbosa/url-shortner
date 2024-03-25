@@ -5,3 +5,15 @@ Content-Type: application/json
     "code": "andersonbosa",
     "url": "https://andersonbosa.vercel.app"
 }
+
+###
+
+GET https://localhost:3000/api/links
+
+###
+
+GET https://localhost:3000/code/andersonbosa
+
+###
+
+GET https://localhost:3000/api/metrics

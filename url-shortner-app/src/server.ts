@@ -11,10 +11,10 @@ import { z } from 'zod'
 
 import config from './config'
 
+import { readFileSync } from 'fs'
 import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
-import { readFileSync } from 'fs'
 
 const dependencyContainer = {
   services: {
