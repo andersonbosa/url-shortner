@@ -1,4 +1,4 @@
-POST https://localhost:3000/api/links
+POST http://localhost:3000/api/links
 Content-Type: application/json
 
 {
@@ -8,12 +8,12 @@ Content-Type: application/json
 
 ###
 
-GET https://localhost:3000/api/links
+GET http://localhost:3000/api/links
 
 ###
 
-GET https://localhost:3000/code/infinite
+GET http://localhost:3000/code/infinite
 
 ###
 
-GET https://localhost:3000/api/metrics
+GET http://localhost:3000/api/metrics
