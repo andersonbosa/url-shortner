@@ -19,5 +19,5 @@ export interface ILinkEntity {
 export interface ILinksController {
   getShortlinks (): Promise<ILinkEntity[] | null>
   getShortlink (code: string): Promise<ILinkEntity | null>
-  createShortlink (code:string, url:string):: Promise<ILinkEntity>
+  createShortlink (code:string, url:string): Promise<ILinkEntity>
 }
