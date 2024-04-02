@@ -57,8 +57,16 @@ const fastifyServer = fastify({
   ...httpsFastifyOption
 })
 
-fastifyServer.register(cors, {})
-fastifyServer.register(helmet, {})
+fastifyServer.register(cors, { origin: '*' })
+
+fastifyServer.register(helmet, {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ['*']
+    }
+  }
+})
+
 fastifyServer.register(fastifyRateLimit, {
   global: true,
   max: 32,
