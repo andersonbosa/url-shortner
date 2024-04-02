@@ -9,6 +9,7 @@
   "license": "ISC",
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
+    "build": "tsc",
     "start": "tsx ./src/server.ts",
     "dev": "tsx --inspect --watch ./src/server.ts",
     "dev:nodemon": "nodemon --inspect ./src/server.ts",

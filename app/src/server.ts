@@ -168,9 +168,10 @@ fastifyServer.post('/api/links', async (request, reply) => {
 
     return reply.status(201).send(createdLink)
 
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof dependencyContainer.services.postgres.PostgresError) {
-      if (error.code === '23505') {
+      const errCode: any = error.code
+      if (errCode === '23505') {
         return reply.status(400).send({ message: 'Duplicated code.' })
       }
       return reply.status(500).send({ message: 'Internal Server Error due PostgresSQL.' })
