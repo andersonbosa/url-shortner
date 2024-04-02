@@ -130,12 +130,7 @@ fastifyServer.get('/code/:code', async (request, reply) => {
 
   const { code } = getLinkSchema.parse(request.params)
 
-  const results = await dependencyContainer.services.postgres/* sql */`
-  SELECT id, original_url
-  FROM "url-shortner-db"
-  WHERE code = ${code}`
-
-  const foundLink = results[0]
+  const foundLink = await controllers.links.getShortlink(code)
 
   if (!foundLink) {
     return reply.status(400).send({ message: 'Something goes wrong!' })

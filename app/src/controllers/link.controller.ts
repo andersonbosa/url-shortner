@@ -14,8 +14,16 @@ export class LinksController implements ILinksController {
 
     return results
   }
+  
   async getShortlink (code: string): Promise<ILinkEntity | null> {
-    throw new Error('Method not implemented.')
+    const results = await this.dependencyContainer.services.postgres/* sql */`
+    SELECT id, original_url
+    FROM "url-shortner-db"
+    WHERE code = ${code}`
+
+    const foundLink = results[0]
+
+    return foundLink
   }
 
   async createShortlink (code: string, url: string): Promise<ILinkEntity> {
