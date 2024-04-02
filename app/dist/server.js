@@ -50,13 +50,13 @@ const dependencyContainer = {
     plugins: {
         staticServer: {
             paths: {
-                public: (0, path_1.join)(__dirname, 'public'),
-                pages: (0, path_1.join)(__dirname, 'public/pages'),
-                assets: (0, path_1.join)(__dirname, 'public/assets'),
+                public: (0, path_1.join)(__dirname, '..', 'public'),
+                pages: (0, path_1.join)(__dirname, '..', 'public/pages'),
+                assets: (0, path_1.join)(__dirname, '..', 'public/assets'),
             }
         },
         swagger: {
-            staticFilePath: (0, path_1.join)(__dirname, 'public'),
+            staticFilePath: (0, path_1.join)(__dirname, '..', 'public'),
             staticFileName: 'swagger.yaml',
         }
     }

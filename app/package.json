@@ -10,13 +10,13 @@
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "build:add":"git add dist",
+    "build:add": "git add dist",
     "typecheck": "tsc --project tsconfig.json",
     "start": "tsx src/server.ts",
     "dev:nodemon": "nodemon --inspect src/server.ts",
     "setup:db": "tsx --inspect src/setup.ts"
   },
-  "pre-commit":[
+  "pre-commit": [
     "typecheck",
     "build",
     "build:add"

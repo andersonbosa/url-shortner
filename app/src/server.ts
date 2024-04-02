@@ -5,7 +5,6 @@ import staticServer from '@fastify/static'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
-
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
