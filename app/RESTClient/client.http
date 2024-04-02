@@ -2,9 +2,19 @@ POST http://localhost:3000/api/links
 Content-Type: application/json
 
 {
-    "code": "andersonbosa",
-    "url": "https://andersonbosa.vercel.app"
+  "code": "andersonbosa",
+  "url": "https://andersonbosa.vercel.app"
 }
+
+###
+
+POST http://localhost:3000/api/links
+Content-Type: application/json
+
+{
+  "url": "https://andersonbosa.vercel.app"
+}
+
 
 ###
 

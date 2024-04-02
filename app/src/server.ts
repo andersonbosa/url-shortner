@@ -7,6 +7,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify from 'fastify'
 
 import { join } from 'path'
+import { v4 as uuidv4 } from 'uuid'
 import { z } from 'zod'
 
 import config, { isProductionEnv } from './config'
@@ -16,7 +17,10 @@ import logger from './lib/logger.service'
 import createPostgreService from './lib/postgres.service'
 import createRedisService from './lib/redis.service'
 
-const dependencyContainer = {
+import { IDependencyContainer } from './ports'
+import { LinksController } from './controllers/link.controller'
+
+const dependencyContainer: IDependencyContainer = {
   services: {
     postgres: createPostgreService(config.database.postgres),
     redis: createRedisService(config.database.redis),
@@ -111,6 +115,10 @@ fastifyServer.register(fastifySwaggerUi, {
   // transformSpecificationClone: true
 })
 
+const controllers = {
+  links: new LinksController(dependencyContainer)
+}
+
 fastifyServer.get('/', async (_, reply) => {
   return reply.sendFile('index.html', join(dependencyContainer.plugins.staticServer.paths.pages))
 })
@@ -140,29 +148,21 @@ fastifyServer.get('/code/:code', async (request, reply) => {
 
 
 fastifyServer.get('/api/links', async (request, reply) => {
-  const results = await dependencyContainer.services.postgres/* sql */`
-  SELECT *
-  FROM "url-shortner-db"
-  ORDER BY created_at DESC`
+  const links = await controllers.links.getShortlinks()
 
-  return results
+  return reply.status(200).send(links)
 })
 
 fastifyServer.post('/api/links', async (request, reply) => {
   const createLinkSchema = z.object({
-    code: z.string().min(8),
+    code: z.string().min(8).default(() => uuidv4()),
     url: z.string().url(),
   })
 
   const { code, url } = createLinkSchema.parse(request.body)
 
   try {
-    const results = await dependencyContainer.services.postgres/* sql */`
-    INSERT INTO "url-shortner-db" (code, original_url)
-    VALUES (${code}, ${url})
-    RETURNING id`
-
-    const createdLink = results[0]
+    const createdLink = await controllers.links.createShortlink(code, url)
 
     return reply.status(201).send(createdLink)
 

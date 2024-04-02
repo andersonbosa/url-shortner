@@ -58,7 +58,14 @@ button {
   bottom: 32px;
 }
 
-/* docs button */
+.btn-expand {
+  transition: all 0.3s ease;
+}
+
+.btn-expand:hover {
+  scale: 1.3;
+}
+
 #docsButtonWrapper {
   display: inline-block;
   position: absolute;
