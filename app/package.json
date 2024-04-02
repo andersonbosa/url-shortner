@@ -9,20 +9,24 @@
   "license": "ISC",
   "author": "Anderson Bosa < https://andersonbosa.vercel.app >",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
+    "build:add":"git add dist",
+    "typecheck": "tsc --project tsconfig.json",
     "start": "tsx ./src/server.ts",
     "dev:nodemon": "nodemon --inspect ./src/server.ts",
-    "setup:db": "tsx --inspect ./src/setup.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup:db": "tsx --inspect ./src/setup.ts"
   },
+  "pre-commit":[
+    "typecheck",
+    "build",
+    "build:add"
+  ],
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.30",
     "@types/uuid": "^9.0.8",
     "nodemon": "^3.1.0",
     "pino-pretty": "^11.0.0",
-    "pre-commit": "^1.2.2",
-    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
