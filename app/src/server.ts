@@ -29,13 +29,13 @@ const dependencyContainer: IDependencyContainer = {
   plugins: {
     staticServer: {
       paths: {
-        public: join(__dirname, 'public'),
-        pages: join(__dirname, 'public/pages'),
-        assets: join(__dirname, 'public/assets'),
+        public: join(__dirname, '..', 'public'),
+        pages: join(__dirname, '..', 'public/pages'),
+        assets: join(__dirname, '..', 'public/assets'),
       }
     },
     swagger: {
-      staticFilePath: join(__dirname, 'public'),
+      staticFilePath: join(__dirname, '..', 'public'),
       staticFileName: 'swagger.yaml',
     }
   }

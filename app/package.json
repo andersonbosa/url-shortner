@@ -11,7 +11,6 @@
   "scripts": {
     "build": "tsc",
     "start": "tsx ./src/server.ts",
-    "dev": "tsx --inspect --watch ./src/server.ts",
     "dev:nodemon": "nodemon --inspect ./src/server.ts",
     "setup:db": "tsx --inspect ./src/setup.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
