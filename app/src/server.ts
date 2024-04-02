@@ -141,7 +141,6 @@ fastifyServer.get('/code/:code', async (request, reply) => {
   return reply.redirect(301, foundLink.original_url)
 })
 
-
 fastifyServer.get('/api/links', async (request, reply) => {
   const links = await controllers.links.getShortlinks()
 
@@ -172,13 +171,12 @@ fastifyServer.post('/api/links', async (request, reply) => {
   }
 })
 
-
 fastifyServer.get('/api/metrics', async (request, reply) => {
   const results = await dependencyContainer.services.redis.zRangeByScoreWithScores('metrics', 0, 50)
 
   const mappedResults = results
     .sort((a: any, b: any) => a.score - b.score)
-    .map(item => ({
+    .map((item: any) => ({
       shortLinkId: Number(item.value),
       clicks: item.score,
     }))
