@@ -1,15 +1,27 @@
 {
-  "devCommand": "npm run dev",
+  "version": 2,
+  "outputDirectory": "dist",
   "builds": [
     {
-      "src": "src/server.ts",
-      "use": "@vercel/node"
+      "src": "dist/server.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/server.ts"
+      "dest": "/src/server.js"
     }
-  ]
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "permanent": true
+    }
+  ],
+  "functions": {
+    "api/*": {}
+  }
 }
