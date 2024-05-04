@@ -114,6 +114,7 @@ const parseConnectionUrl = (url: string): Partial<PostgresConfig | RedisConfig> 
     password: urlObj.password,
   }
 }
+
 /**
  * Merges two objects, keeping only the keys from the preferedProps object and replacing their values
  * with the corresponding values from the preferedProps object, if defined.
