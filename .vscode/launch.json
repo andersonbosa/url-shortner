@@ -12,6 +12,7 @@
         "<node_internals>/**"
       ],
       "type": "node",
+      "preLaunchTask": "",
       "restart": true
     },
     {

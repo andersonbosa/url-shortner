@@ -4,7 +4,7 @@ import config from '../config'
 
 
 const loggingConfig = config.logging
-const logsDir = join(__dirname, '..', '..', '..', 'logs')
+const logsDir = join(__dirname, '..', '..', 'logs')
 const logFileName = join(logsDir, loggingConfig.fileName ?? 'access.log')
 
 const pinoTranports = pino.transport({

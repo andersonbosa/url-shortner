@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Why Bitnami images? They are ready to production.
 # See more in https://github.com/bitnami/containers/blob/main/bitnami/postgresql/README.md#why-use-bitnami-images
 

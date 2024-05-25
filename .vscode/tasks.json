@@ -13,6 +13,13 @@
 				"isDefault": true
 			},
 			"label": "tsc: watch - url-shortner-app"
+		},
+		/* POC para buildar projeto  do trabalho e usar debugging */
+		{
+			"label": "framework-api-dev-builder",
+			"type": "shell",
+			"command": "docker exec framework-api ls -lsa",
+			"problemMatcher": []
 		}
 	]
 }
